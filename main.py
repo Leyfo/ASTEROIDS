@@ -16,6 +16,8 @@ TILE_SIZE = 32
 
 # Temp Variables
 TEMP1 = 50 # Debug max times
+TEMP_TEXT_PLAY = 'PLAY'
+TEMP_TEXT_MORE = 'MORE'
 
 # For Loops
 COUNTER0 = 100 # Debug
@@ -81,18 +83,21 @@ class testObject(pygame.sprite.Sprite):
 	def __init__(self, x, y):
 		self.x = x
 		self.y = y
+		self.image = pygame.image.load('sprites/err.png')
+		self.angle = 0
 
 	def update(self):
 		pass
 
 
 	def draw(self):
-		pass
+		TEMP_IMG_PLAYER = pygame.transform.rotate(self.image, self.angle)
+		SCREEN.blit(TEMP_IMG_PLAYER, (self.x - int(TEMP_IMG_PLAYER.get_width() / 2), self.y - int(TEMP_IMG_PLAYER.get_height() / 2)))
 
 
 # Main Functions
 def mainMenu():
-	global DEBUG, COUNTER0
+	global DEBUG, COUNTER0, TEMP_TEXT_PLAY, TEMP_TEXT_MORE
 
 	# Variables
 	mainRun = True
@@ -100,7 +105,7 @@ def mainMenu():
 	option_selected = 0
 
 	# Objects
-	test1 = testObject(400, 300)
+	#test1 = testObject(400, 300)
 
 	while mainRun:
 
@@ -121,21 +126,36 @@ def mainMenu():
 				if event.key == pygame.K_p:
 					DEBUG = not DEBUG
 
+				if event.key == pygame.K_x:
+					if option_selected == 0:
+						mainRun = False
+						game()
+
+					if option_selected == 1:
+						pass
+
 				if event.key == pygame.K_UP:
-					print('UP')
+					if option_selected == 1: option_selected = 0
 
 				if event.key == pygame.K_DOWN:
-					print('DOWN')
+					if option_selected == 0: option_selected = 1
 
 		# Update Objects
-		test1.update()
+		#test1.update()
 
 		# Drawn Objects
-		test1.draw()
+		#test1.draw()
 
 		# Drawn GUI
-		drawText(SCREEN, 'PLAY', WHITE, 26, (WIN_WIDTH / 2, (WIN_HEIGHT / 2) - 15))
-		drawText(SCREEN, 'MORE', WHITE, 26, (WIN_WIDTH / 2, (WIN_HEIGHT / 2) + 15))
+		if option_selected == 0:
+			TEMP_TEXT_PLAY = '- PLAY -'
+			TEMP_TEXT_MORE = 'MORE'
+		if option_selected == 1:
+			TEMP_TEXT_PLAY = 'PLAY'
+			TEMP_TEXT_MORE = '- MORE -'
+
+		drawText(SCREEN, TEMP_TEXT_PLAY, WHITE, 26, (WIN_WIDTH / 2, (WIN_HEIGHT / 2) - 15))
+		drawText(SCREEN, TEMP_TEXT_MORE, WHITE, 26, (WIN_WIDTH / 2, (WIN_HEIGHT / 2) + 15))
 
 		drawText(SCREEN, 'Version 0.1.4', WHITE, 20, (WIN_WIDTH / 2, WIN_HEIGHT - 60))
 		drawText(SCREEN, 'by LeyfoGazel', WHITE, 20, (WIN_WIDTH / 2, WIN_HEIGHT - 40))
@@ -161,6 +181,8 @@ def game():
 
 	gameRun = True
 
+	test1 = testObject(400, 300)
+
 	while gameRun:
 
 		SCREEN.fill(SCREEN_COLOR_ALPHA) # Clear Screen
@@ -180,7 +202,12 @@ def game():
 				if event.key == pygame.K_p:
 					DEBUG = not DEBUG
 
+		# Update Objects
+		test1.update()
+		test1.angle += 1
+
 		# Drawn Objects
+		test1.draw()
 
 		# Drawn GUI
 
